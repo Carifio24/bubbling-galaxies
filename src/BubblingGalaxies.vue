@@ -38,14 +38,36 @@
             />
           </div>
           <div id="center-buttons">
+            <IconButton
+              :icon="mdi-cube-scan"
+              color="white"
+              @activate="showModel = !showModel"
+            />
           </div>
           <div id="right-buttons">
             <ImagesetOffset
               v-model:rotation="angle"
               v-model:offset="offset"
-            /> 
+            />
           </div>
         </div>
+
+        <!-- Display the 3D model -->
+        <v-dialog
+          v-model="showModel"
+          eager
+        >
+          <ModelViewer
+            :src="modelSrc"
+            :alt="A 3D model of the simulated galaxy"
+          >
+            <template #ar-button>
+              <v-btn>
+                Show in AR
+              </v-btn>
+            </template>
+          </ModelViewer>
+        </v-dialog>
 
 
         <!-- This block contains the elements (e.g. the project icons) displayed along the bottom of the screen -->
@@ -54,7 +76,7 @@
           <!-- <GesturePreview /> -->
           <SplashGesture v-if="splashIsClosed && !isLoading" />
           <div id="image-index-control">
-            <v-slider 
+            <v-slider
               v-if="ready"
               v-model="imageIndex"
               class="image-index-control-slider"
@@ -84,7 +106,7 @@
                 </v-tooltip>
               </template>
             </v-slider>
-            <v-slider 
+            <v-slider
               v-if="ready"
               v-model="simulationOpactiy"
               class="image-opacity-control-slider"
@@ -199,7 +221,8 @@ const positionSet = ref(false);
 const accentColor = ref("#ffa000");
 const buttonColor = ref("#ffffff");
 
-
+const modelSrc = "./assets/model.glb";
+const showModel = ref(false);
 
 const layers = ref<ImageSetLayer[]>([]);
 const isets = ref<Imageset[]>([]);
@@ -226,9 +249,9 @@ function rollView(angleDegrees: number) {
     rollRad: newRoll,
     instant: true,
   });
-} 
+}
 
-/** 
+/**
  * Let's only set the rotation on the initial load.
  * It is od to have it swtiching when you rotate the screem
  * It looks ok when objects are centered, but when not centered
@@ -262,7 +285,7 @@ function moveToEdge(imageset: Imageset, edge: 'top' | 'right' | 'bottom' | 'left
     right: 0,
     center: 0,
   };
-  
+
   const newCenterX = centerX + xOff[edge];
   const newCenterY = centerY + yOff[edge];
   console.log(`Moving to edge ${edge} with new center: (x, y) = (${xOff[edge]}, ${yOff[edge]})`);
@@ -289,10 +312,10 @@ onMounted(() => {
   }
 
   store.waitForReady().then(async () => {
-    
+
     store.applySetting(['showGrid', true]);
     store.applySetting(['showEquatorialGridText', true]);
-    
+
 
     store.loadImageCollection({
       url: "i5_all.wtml",
@@ -311,7 +334,7 @@ onMounted(() => {
           name: imageset.get_name(),
           goto: false,
         }).then(newLayer => {
-          newLayer.set_enabled(true); 
+          newLayer.set_enabled(true);
           newLayer.set_opacity(index === 0 ? simulationOpactiy.value : 0); // show only the first layer initially
           layers.value.push(newLayer);
           if (index === 0) {
@@ -324,7 +347,7 @@ onMounted(() => {
             moveToEdge(iset, offsetSim.value ? 'left' : 'center', offsetSim.value).then(() => positionSet.value = true);
           };
         });
-      }); 
+      });
     });
     layersLoaded.value = true;
   });
