@@ -39,7 +39,7 @@
           </div>
           <div id="center-buttons">
             <IconButton
-              :icon="mdi-cube-scan"
+              icon="mdi-cube-scan"
               color="white"
               @activate="showModel = !showModel"
             />
@@ -57,16 +57,18 @@
           v-model="showModel"
           eager
         >
-          <ModelViewer
-            :src="modelSrc"
-            :alt="A 3D model of the simulated galaxy"
-          >
-            <template #ar-button>
-              <v-btn>
-                Show in AR
-              </v-btn>
-            </template>
-          </ModelViewer>
+          <v-card>
+            <ModelViewerComponent
+              src="https://glueviz.org/glue-ar/examples/edenhofer-voxel-350.glb"
+              alt="A 3D model of the simulated galaxy"
+            >
+              <template #ar-button>
+                <v-btn>
+                  Show in AR
+                </v-btn>
+              </template>
+            </ModelViewerComponent>
+          </v-card>
         </v-dialog>
 
 
@@ -221,7 +223,6 @@ const positionSet = ref(false);
 const accentColor = ref("#ffa000");
 const buttonColor = ref("#ffffff");
 
-const modelSrc = "./assets/model.glb";
 const showModel = ref(false);
 
 const layers = ref<ImageSetLayer[]>([]);
@@ -679,6 +680,10 @@ and remember, position:absolute is still a positioned parent, so children can be
   pointer-events: auto;
 }
 
-
+model-viewer {
+  margin: auto;
+  width: 70vw;
+  height: 70vh;
+}
 
 </style>
