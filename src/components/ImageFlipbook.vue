@@ -269,6 +269,7 @@ function onTouchEnd(e: TouchEvent) {
 }
 
 function loadImages() {
+  console.log("loadImages");
   // The <= is not a typo - the bounds on v-slider (and thus here) are inclusive
   const frames = props.frames;
   const isArray = Array.isArray(frames);
@@ -282,7 +283,7 @@ function loadImages() {
   }
 }
 
-watch(() => [props.frames, props.preload, props.step], (_frames, preload, _step) => { if (preload) { loadImages(); } });
+watch(() => [props.frames, props.preload, props.step], ([_frames, preload, _step]) => { if (preload) { loadImages(); } });
 
 onMounted(() => {
   if (props.preload) {
