@@ -70,7 +70,7 @@ watch(playing, (play: boolean) => {
   if (play) {
     intervalHandle = setInterval(() => {
       if (index.value !== undefined && index.value < props.max - 1) {
-        index.value += 2; // frames are every other
+        index.value += props.step;
       } else {
         index.value = props.min;
       }
@@ -84,18 +84,22 @@ watch(playing, (play: boolean) => {
 interface Props {
   min?: number;
   max: number;
+  step?: number;
   frames: string[] | ((index: number) => string);
   interval?: number;  // in ms
   color?: string;
   visible?: boolean;
   initialScale?: number;
+  preload?: boolean;
 }
 const props = withDefaults(defineProps<Props>(), {
   min: 0,
+  step: 2,  // frames are every other
   interval: 100,
   color: "white",
   visible: false,
   initialScale: 1,
+  preload: false,
 });
 
 watch(() => props.visible, (visible) => {
@@ -116,7 +120,7 @@ const src = computed(() => {
 /**
  * Zoom Implementation via Claude Sonnet 4.6 to make sure it
  * will work with mouse, touch and trackpad inputs
- * 
+ *
  */
 const viewport = useTemplateRef("viewport");
 
@@ -264,7 +268,26 @@ function onTouchEnd(e: TouchEvent) {
   prevTouchPoints = touchPoints(e.touches);
 }
 
+function loadImages() {
+  // The <= is not a typo - the bounds on v-slider (and thus here) are inclusive
+  const frames = props.frames;
+  const isArray = Array.isArray(frames);
+  for (let index = props.min; index <= props.max; index+= props.step) {
+    const link = document.createElement("link");
+    link.rel = "preload";
+    link.as = "image";
+    link.href = isArray ? frames[index] : frames(index);
+    link.setAttribute("fetchpriority", "high");
+    document.head.appendChild(link);
+  }
+}
+
+watch(() => [props.frames, props.preload, props.step], (_frames, preload, _step) => { if (preload) { loadImages(); } });
+
 onMounted(() => {
+  if (props.preload) {
+    loadImages();
+  }
   initView();
   if (typeof PointerEvent === "undefined") {
     const vp = viewport.value as HTMLElement;

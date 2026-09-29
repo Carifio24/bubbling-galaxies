@@ -84,7 +84,7 @@
       >
         Skip Intro
       </v-btn>
-      <div 
+      <div
         v-if="showCrawl"
         class="crawl-scroll-backdrop"
       ></div>
@@ -201,7 +201,7 @@
         >
           <div class="merge-cube-shoutout ma-4">
             <h3>
-              Have a 
+              Have a
               <img
                 class="ml-1"
                 src="./assets/MergeCube-Logo-Purple.svg"
@@ -298,7 +298,7 @@
               :closed-text="showImageCard ? '' : 'Foreground'"
               :exclude-items="['2023 Infrared (Spitzer)', 'Optical (Kitt Peak)']"
             />
-            <div 
+            <div
               v-if="!(showImageCard || showSimulation)"
               class="base-switch-button"
             >
@@ -427,7 +427,7 @@
         >
           <v-expansion-panel
             v-if="backgroundPlace.length > 0"
-          > 
+          >
             <v-expansion-panel-title class="pa-2">
               Background: {{ backgroundPlace[0].get_name() }}
             </v-expansion-panel-title>
@@ -440,7 +440,7 @@
             </v-expansion-panel-text>
           </v-expansion-panel>
         </v-expansion-panels>
-      </InformationSheet> 
+      </InformationSheet>
     </component>
   </v-app>
 </template>
@@ -627,8 +627,8 @@ function switchBaseImage() {
 
 const backgroundPlace = computed<Place[]>({
   get() {
-    const place = useIrBase.value 
-      ? galleryPlaces.value.find(p => p.get_name() === backgroundPlaceNames[0]) 
+    const place = useIrBase.value
+      ? galleryPlaces.value.find(p => p.get_name() === backgroundPlaceNames[0])
       : galleryPlaces.value.find(p => p.get_name() === backgroundPlaceNames[1]);
     console.log("Computed background place as", place?.get_name());
     return place ? [place] : [];
@@ -814,8 +814,8 @@ function updateCurrentLayersOpacity(opacity: number) {
   }
 }
 
-// view has changed means either 
-// - the view is distant from the initial view (more than 10 arcsec) 
+// view has changed means either
+// - the view is distant from the initial view (more than 10 arcsec)
 // - or the shown selectedGallery item is not the default
 // - or we have a different useIrBase value than the default
 const viewHasChanged = computed(() => {
@@ -824,7 +824,7 @@ const viewHasChanged = computed(() => {
   const currentRA = store.raRad;
   const currentDec = store.decRad;
   // 1 arcsecond
-  const maxDistance = (1 / 3600) * D2R; 
+  const maxDistance = (1 / 3600) * D2R;
   const distance = Math.sqrt((currentRA - defaultRA) ** 2 + (currentDec - defaultDec) ** 2);
   const selectedItemIsDefault = selectedGalleryItem.value?.get_name() === "Infrared Stars & Dust (JWST)";
   const usingDefaultBase = useIrBase.value === false;
@@ -1384,7 +1384,7 @@ select.base-switch-select option {
     outline: 1px solid white;
   }
 
-  
+
 
   .v-field__input {
     font-size: 0.9em;
@@ -1393,9 +1393,9 @@ select.base-switch-select option {
     padding-top: 24px;
     min-height: 0;
     color: white;
-    
+
   }
-  
+
   .v-field-label.v-field-label--floating {
     font-size: 0.9em;
     color: white;
